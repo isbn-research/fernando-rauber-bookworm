@@ -21,9 +21,11 @@
 
         <activity
             android:name=".activity.BookDetailsActivity"
+            android:label="@string/book_details"
             android:parentActivityName=".activity.MainActivity" />
         <activity
             android:name=".activity.MainActivity"
+            android:label="@string/search"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -1,24 +1,23 @@
 <resources>
     <string name="app_name">Bookworm</string>
 
-    <string name="searching_google">Searching on Google book database…</string>
 
+    //activity labels
+    <string name="search">Search</string>
+    <string name="book_details">Book Details</string>
+
+    <string name="searching_google">Searching on Google books…</string>
+    <string name="book_error">Book contains errors and can not be seeing the details, we are sorry</string>
 
     <string name="ok">OK</string>
 
     <string name="title">Title</string>
-    <string name="title_required">Insert a book title</string>
     <string name="title_hint">Ex. Harry Potter, Don Quixote…</string>
-
     <string name="author">Author</string>
-    <string name="author_required">Insert a book author</string>
     <string name="author_hint">Ex. Herman Melville, Marcel Proust…</string>
-
     <string name="isbn">ISBN</string>
-    <string name="isbn_required">Insert a book ISBN</string>
     <string name="isbn_hint">Ex. 9783161484100</string>
-
-    <string name="search">Search</string>
+    <string name="text_required">Please insert a book title, author or ISBN</string>
 
 
     <string name="by">by</string>
@@ -30,6 +29,5 @@
     <string name="description">Description</string>
 
     <string name="book_not_found">Book not found</string>
-
 
 </resources>

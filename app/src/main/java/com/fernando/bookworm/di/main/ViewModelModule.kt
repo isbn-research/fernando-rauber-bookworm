@@ -2,6 +2,7 @@ package com.fernando.bookworm.di.main
 
 import androidx.lifecycle.ViewModel
 import com.fernando.bookworm.di.ViewModelKey
+import com.fernando.bookworm.viewmodels.BookDetailsViewModel
 import com.fernando.bookworm.viewmodels.SearchViewModel
 import dagger.Binds
 import dagger.Module
@@ -15,4 +16,8 @@ abstract class ViewModelModule {
     @ViewModelKey(SearchViewModel::class)
     abstract fun bindSearchViewModel(viewModel: SearchViewModel): ViewModel
 
+    @Binds
+    @IntoMap
+    @ViewModelKey(BookDetailsViewModel::class)
+    abstract fun bindBookDetailsViewModel(viewModel: BookDetailsViewModel): ViewModel
 }

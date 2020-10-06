@@ -23,7 +23,6 @@ import com.fernando.bookworm.viewmodels.SearchViewModel
 import com.fernando.bookworm.viewmodels.ViewModelProviderFactory
 import dagger.android.support.DaggerFragment
 import io.reactivex.disposables.Disposable
-import kotlinx.android.synthetic.main.fragment_search.*
 import javax.inject.Inject
 
 
@@ -50,27 +49,17 @@ class SearchFragment : DaggerFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        init(view)
+        initVariables(view)
 
         //viewModel
         viewModel = ViewModelProvider(this, providerFactory).get(SearchViewModel::class.java)
 
-        initRecyclerView()
+        variableAction()
         observers()
-
-        barcodeDisposable = RxBus.listen(RxEvent.EventSearchByBarcode::class.java).subscribe {
-
-            //display the barcode and search
-            if (it.barcode.length >= 10) {
-                radioGroup.check(R.id.rb_isbn)
-                etSearch.setText(it.barcode)
-                searchBook()
-            }
-        }
     }
 
     //initialize all variable
-    private fun init(view: View) {
+    private fun initVariables(view: View) {
         recyclerBook = view.findViewById(R.id.recycler_book_result)
         radioGroup = view.findViewById(R.id.rg_search_options)
         etSearch = view.findViewById(R.id.et_search)
@@ -79,12 +68,19 @@ class SearchFragment : DaggerFragment() {
         //create loading popup
         loadingDialog = requireActivity().createLoadingPopup()
 
-        //action when click in search
+        //init the recycler
+        recyclerBook.layoutManager = LinearLayoutManager(activity)
+        recyclerBook.adapter = adapter
+    }
+
+    private fun variableAction() {
+
+        //action when click in search button
         btSearch.setOnClickListener {
             searchBook()
         }
 
-        //Clean the Edit text value and apply hint
+        //change the hint
         radioGroup.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.rb_title ->
@@ -100,7 +96,6 @@ class SearchFragment : DaggerFragment() {
     }
 
     private fun searchBook() {
-
         //check which radio button is checked(title, author or ISBN)
         when (radioGroup.checkedRadioButtonId) {
 
@@ -116,11 +111,25 @@ class SearchFragment : DaggerFragment() {
     override fun onDestroy() {
         super.onDestroy()
 
+        //dispose if fragment destroyed
         if (!barcodeDisposable.isDisposed)
             barcodeDisposable.dispose()
     }
 
+    //listener and observer
     private fun observers() {
+        //listener for when the user scan a code, will be redirect to search tab and search the book
+        barcodeDisposable = RxBus.listen(RxEvent.EventSearchByBarcode::class.java).subscribe {
+
+            //barcode can be from 10 to 13 length
+            if (it.barcode.length >= 10) {
+                //set the barcode into edit text and search
+                radioGroup.check(R.id.rb_isbn)
+                etSearch.setText(it.barcode)
+                searchBook()
+            }
+        }
+
         viewModel.searchResultObserver().removeObservers(viewLifecycleOwner);
         viewModel.searchResultObserver().observe(viewLifecycleOwner, { bookResource ->
 
@@ -133,7 +142,7 @@ class SearchFragment : DaggerFragment() {
 
                     SUCCESS -> {
                         loadingDialog.dismiss()
-                        //update adatper
+                        //update adapter
                         adapter.setBooks(bookResource.data)
                     }
 
@@ -151,11 +160,6 @@ class SearchFragment : DaggerFragment() {
                     }
                 }
         })
-    }
-
-    private fun initRecyclerView() {
-        recycler_book_result.layoutManager = LinearLayoutManager(activity)
-        recycler_book_result.adapter = adapter
     }
 
 }

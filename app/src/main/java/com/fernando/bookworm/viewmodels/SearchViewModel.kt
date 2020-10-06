@@ -10,6 +10,7 @@ import com.fernando.bookworm.model.BookModel
 import com.fernando.bookworm.model.google.ResultGoogle
 import com.fernando.bookworm.repository.BookRepository
 import com.fernando.bookworm.util.BookResource
+import com.fernando.bookworm.util.Constants
 import io.reactivex.Flowable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
@@ -27,8 +28,9 @@ class SearchViewModel @Inject constructor() : ViewModel() {
     fun searchResultObserver(): LiveData<BookResource<List<BookModel>>> = searchResult
 
     fun searchBook() {
+        //field cant be empty
         if (searchText.isBlank()) {
-            searchResult.value = BookResource.error(R.string.title_required)
+            searchResult.value = BookResource.error(R.string.text_required)
             return
         }
 
@@ -38,9 +40,9 @@ class SearchViewModel @Inject constructor() : ViewModel() {
 
         //set search by Title, Author or ISBN
         searchText = when (searchByRef) {
-            R.string.title -> "intitle:$searchText"
-            R.string.author -> "inauthor:$searchText"
-            else -> "isbn:$searchText"
+            R.string.title -> Constants.SEARCH_BY_TITLE + searchText
+            R.string.author -> Constants.SEARCH_BY_AUTHOR + searchText
+            else -> Constants.SEARCH_BY_ISBN + searchText
         }
 
         transformToLiveData(authRepository.searchBookOnGoogle(searchText))

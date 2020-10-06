@@ -22,7 +22,7 @@ import com.google.android.gms.vision.barcode.BarcodeDetector
 import dagger.android.support.DaggerFragment
 
 
-class CodeReaderFragment : DaggerFragment() {
+class BarcodeScannerFragment : DaggerFragment() {
 
     private companion object {
         const val REQUEST_CAMERA_PERMISSION = 20
@@ -35,7 +35,7 @@ class CodeReaderFragment : DaggerFragment() {
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_code_reader, container, false)
+        return inflater.inflate(R.layout.fragment_barcode_scanner, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -51,13 +51,13 @@ class CodeReaderFragment : DaggerFragment() {
 
 
     private fun setUpControls() {
-        detector = BarcodeDetector.Builder(requireContext()).build()
-        cameraSource = CameraSource.Builder(requireContext(), detector)
-            .setAutoFocusEnabled(true)
-            .build()
-
-        surfaceView.holder.addCallback(surfaceCallBack)
-        detector.setProcessor(processor)
+//        detector = BarcodeDetector.Builder(requireContext()).build()
+//        cameraSource = CameraSource.Builder(requireContext(), detector)
+//            .setAutoFocusEnabled(true)
+//            .build()
+//
+//        surfaceView.holder.addCallback(surfaceCallBack)
+//        detector.setProcessor(processor)
     }
 
     private fun askForPermission() {

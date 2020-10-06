@@ -3,7 +3,7 @@ package com.fernando.bookworm.adapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import com.fernando.bookworm.activity.CodeReaderFragment
+import com.fernando.bookworm.activity.BarcodeScannerFragment
 import com.fernando.bookworm.activity.SearchFragment
 import com.fernando.bookworm.util.Constants
 import javax.inject.Inject
@@ -15,7 +15,7 @@ class TabAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm, BEHAVIOR_RESUME
     lateinit var fragmentSearch: SearchFragment
 
     @Inject
-    lateinit var fragmentCode: CodeReaderFragment
+    lateinit var fragmentCode: BarcodeScannerFragment
 
     override fun getItem(position: Int): Fragment {
         var fragment: Fragment? = null
@@ -24,7 +24,7 @@ class TabAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm, BEHAVIOR_RESUME
                 fragment = SearchFragment()
             }
             1 -> {
-                fragment = CodeReaderFragment()
+                fragment = BarcodeScannerFragment()
             }
         }
         return fragment!!

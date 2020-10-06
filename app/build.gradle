@@ -47,9 +47,6 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.google.android.material:material:1.2.1'
 
-
-//    implementation 'com.google.apis:google-api-services-books:v1-rev20200717-1.30.10'
-
     // Glide
     def glide_version = '4.11.0'
     implementation "com.github.bumptech.glide:glide:$glide_version"

@@ -18,7 +18,6 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        supportActionBar?.title = getString(R.string.search)
 
         val sectionsPagerAdapter = TabAdapter(supportFragmentManager)
         val viewPager: ViewPager = findViewById(R.id.view_pager)
@@ -33,12 +32,12 @@ class MainActivity : BaseActivity() {
             if (it.barcode.length >= 10)
                 viewPager.setCurrentItem(0, true)
         }
-
     }
 
     override fun onDestroy() {
         super.onDestroy()
 
+        //destroy listener so wont leak memory
         if (!barcodeDisposable.isDisposed)
             barcodeDisposable.dispose()
     }
