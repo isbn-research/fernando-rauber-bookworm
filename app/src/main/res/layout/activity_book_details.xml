@@ -81,7 +81,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
-                android:text="@string/publisher" />
+                android:text="@string/n_a" />
         </LinearLayout>
 
         <LinearLayout
@@ -101,7 +101,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
-                android:text="@string/published" />
+                android:text="@string/n_a" />
         </LinearLayout>
 
         <LinearLayout
@@ -120,7 +120,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
-                android:text="@string/page_number" />
+                android:text="@string/n_a" />
         </LinearLayout>
 
 
@@ -140,7 +140,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
-                android:text="@string/isbn" />
+                android:text="@string/n_a" />
         </LinearLayout>
 
         <LinearLayout
@@ -159,9 +159,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
-                android:text="@string/isbn" />
+                android:text="@string/n_a" />
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:id="@+id/layout_ISBN_Other"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/isbn_code_other"
+                android:textColor="@color/text_black" />
+
+            <TextView
+                android:id="@+id/tv_isbn_other"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="@string/isbn" />
+        </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
@@ -176,7 +196,7 @@
             android:layout_width="match_parent"
             android:layout_height="34dp"
             android:layout_marginTop="4dp"
-            android:text="@string/description"
+            android:text="@string/n_a"
             android:textAlignment="viewStart" />
 
     </LinearLayout>

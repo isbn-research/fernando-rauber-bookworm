@@ -8,7 +8,10 @@
 
     <string name="searching_google">Searching on Google books…</string>
     <string name="book_error">Book contains errors and can not be seeing the details, we are sorry</string>
+    <string name="permission_required">Camera permission is required to continue</string>
+    <string name="camera_msg">Point the camera at the barcode</string>
 
+    <string name="error">Something went wrong. Sorry</string>
     <string name="ok">OK</string>
 
     <string name="title">Title</string>
@@ -23,11 +26,12 @@
     <string name="by">by</string>
     <string name="isbn_code_10">ISBN-10:</string>
     <string name="isbn_code_13">ISBN-13:</string>
+    <string name="isbn_code_other">OTHER:</string>
     <string name="publisher">Publisher:</string>
     <string name="published">Published:</string>
     <string name="page_number">Number of pages:</string>
     <string name="description">Description</string>
-
+    <string name="n_a">N/A</string>
     <string name="book_not_found">Book not found</string>
 
 </resources>

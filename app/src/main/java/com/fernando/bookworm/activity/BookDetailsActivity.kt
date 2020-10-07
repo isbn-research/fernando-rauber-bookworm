@@ -2,21 +2,23 @@ package com.fernando.bookworm.activity
 
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.RequestManager
 import com.fernando.bookworm.BaseActivity
 import com.fernando.bookworm.R
+import com.fernando.bookworm.databinding.ActivityBookDetailsBinding
 import com.fernando.bookworm.extension.toastMessage
 import com.fernando.bookworm.model.BookModel
 import com.fernando.bookworm.util.Constants
 import com.fernando.bookworm.viewmodels.BookDetailsViewModel
 import com.fernando.bookworm.viewmodels.ViewModelProviderFactory
-import kotlinx.android.synthetic.main.activity_book_details.*
 import javax.inject.Inject
 
 class BookDetailsActivity : BaseActivity() {
 
     private lateinit var viewModel: BookDetailsViewModel
+    private lateinit var binding: ActivityBookDetailsBinding
 
     @Inject
     lateinit var requestManager: RequestManager
@@ -27,20 +29,22 @@ class BookDetailsActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_book_details)
+        // View binding
+        binding = ActivityBookDetailsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        //viewModel
+        // ViewModel
         viewModel = ViewModelProvider(this, providerFactory).get(BookDetailsViewModel::class.java)
 
         retrieveBook()
         observers()
     }
 
-    //in case book has some error of formation, it will finish the activity
+    // In case book has some error of formation, it will finish the activity
     private fun retrieveBook() {
         try {
 
-            val book = intent.getSerializableExtra("book") as BookModel
+            val book = intent.getSerializableExtra(Constants.BOOK_KEY) as BookModel
             viewModel.setBookModel(book)
 
         } catch (e: Exception) {
@@ -49,21 +53,36 @@ class BookDetailsActivity : BaseActivity() {
         }
     }
 
-    //observer
+    // Observer
     private fun observers() {
         viewModel.bookObserver().observe(this, { book ->
 
-            requestManager.load(book.imageURL).into(im_book_cover)
+            binding.apply {
 
-            tv_title.text = book.title
-            tv_author.text = book.author
-            tv_isbn_10.text = book.ISBN10
-            tv_isbn_13.text = book.ISBN13
-            tv_publisher.text = book.publisher
-            tv_published_date.text = book.published
-            tv_page_number.text = if (book.pageNumber == 0) Constants.NOT_AVAILABLE else "${book.pageNumber}"
-            tv_description.text = book.description
+                requestManager.load(book.imageURL).into(imBookCover)
 
+                tvTitle.text = book.title
+                tvAuthor.text = book.author
+
+                // Books can have ISBN 10, ISBN 13 and OTHERS
+                book.ISBN.forEach { isbn ->
+
+                    when (isbn.type) {
+
+                        Constants.ISBN_OTHER -> {
+                            layoutISBNOther.visibility = View.VISIBLE
+                            tvIsbnOther.text = isbn.identifier
+                        }
+                        Constants.ISBN_10 -> tvIsbn10.text = isbn.identifier
+                        Constants.ISBN_13 -> tvIsbn13.text = isbn.identifier
+                    }
+                }
+
+                tvPublisher.text = book.publisher
+                tvPublishedDate.text = book.published
+                tvPageNumber.text = if (book.pageNumber == 0) Constants.NOT_AVAILABLE else "${book.pageNumber}"
+                tvDescription.text = book.description
+            }
         })
     }
 

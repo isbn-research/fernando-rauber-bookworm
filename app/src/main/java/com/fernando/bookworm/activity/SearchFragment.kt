@@ -5,14 +5,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.RadioGroup
+import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.fernando.bookworm.R
 import com.fernando.bookworm.adapter.BookAdapter
+import com.fernando.bookworm.databinding.FragmentSearchBinding
 import com.fernando.bookworm.extension.createLoadingPopup
 import com.fernando.bookworm.extension.hideKeyboard
 import com.fernando.bookworm.extension.toastMessage
@@ -30,10 +28,8 @@ class SearchFragment : DaggerFragment() {
 
     private lateinit var viewModel: SearchViewModel
 
-    private lateinit var recyclerBook: RecyclerView
-    private lateinit var radioGroup: RadioGroup
-    private lateinit var etSearch: EditText
-    private lateinit var btSearch: Button
+    private var _binding: FragmentSearchBinding? = null
+    private val binding get() = _binding!!
 
     private lateinit var barcodeDisposable: Disposable
     private lateinit var loadingDialog: AlertDialog
@@ -45,92 +41,88 @@ class SearchFragment : DaggerFragment() {
     lateinit var providerFactory: ViewModelProviderFactory
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_search, container, false)
-    }
+        // View Binding
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        initVariables(view)
-
-        //viewModel
+        // ViewModel
         viewModel = ViewModelProvider(this, providerFactory).get(SearchViewModel::class.java)
 
+        initVariables()
         variableAction()
         observers()
+
+        return binding.root
     }
 
-    //initialize all variable
-    private fun initVariables(view: View) {
-        recyclerBook = view.findViewById(R.id.recycler_book_result)
-        radioGroup = view.findViewById(R.id.rg_search_options)
-        etSearch = view.findViewById(R.id.et_search)
-        btSearch = view.findViewById(R.id.bt_search)
+    override fun onDestroyView() {
+        super.onDestroyView()
 
-        //create loading popup
+        _binding = null
+    }
+
+    // Initialize variables
+    private fun initVariables() {
+        // Create loading popup
         loadingDialog = requireActivity().createLoadingPopup()
 
-        //init the recycler
-        recyclerBook.layoutManager = LinearLayoutManager(activity)
-        recyclerBook.adapter = adapter
+        // Init the recycler
+        binding.recyclerBookResult.layoutManager = LinearLayoutManager(activity)
+        binding.recyclerBookResult.adapter = adapter
     }
 
     private fun variableAction() {
 
-        //action when click in search button
-        btSearch.setOnClickListener {
-            searchBook()
+        // Action when click in search button
+        binding.btSearch.setOnClickListener {
+            viewModel.searchBook()
         }
+        // Set value into ViewModel
+        binding.etSearch.doAfterTextChanged { text -> viewModel.searchText = text?.toString() ?: "" }
 
-        //change the hint
-        radioGroup.setOnCheckedChangeListener { _, checkedId ->
+        viewModel.searchByRef = R.string.title
+
+        // Change the hint
+        binding.rgSearchOptions.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
-                R.id.rb_title ->
-                    etSearch.setHint(R.string.title_hint)
-
-                R.id.rb_author ->
-                    etSearch.setHint(R.string.author_hint)
-
-                R.id.rb_isbn ->
-                    etSearch.setHint(R.string.isbn_hint)
+                R.id.rb_title -> {
+                    binding.etSearch.setHint(R.string.title_hint)
+                    viewModel.searchByRef = R.string.title
+                }
+                R.id.rb_author -> {
+                    binding.etSearch.setHint(R.string.author_hint)
+                    viewModel.searchByRef = R.string.author
+                }
+                R.id.rb_isbn -> {
+                    binding.etSearch.setHint(R.string.isbn_hint)
+                    viewModel.searchByRef = R.string.isbn
+                }
             }
         }
-    }
-
-    private fun searchBook() {
-        //check which radio button is checked(title, author or ISBN)
-        when (radioGroup.checkedRadioButtonId) {
-
-            R.id.rb_title -> viewModel.searchByRef = R.string.title
-            R.id.rb_author -> viewModel.searchByRef = R.string.author
-            R.id.rb_isbn -> viewModel.searchByRef = R.string.isbn
-        }
-
-        viewModel.searchText = etSearch.text.toString()
-        viewModel.searchBook()
     }
 
     override fun onDestroy() {
         super.onDestroy()
 
-        //dispose if fragment destroyed
+        // Dispose if fragment destroyed
         if (!barcodeDisposable.isDisposed)
             barcodeDisposable.dispose()
     }
 
-    //listener and observer
+    // Listener and observer
     private fun observers() {
-        //listener for when the user scan a code, will be redirect to search tab and search the book
+        // Listener for when the user scan a code, will be redirect to search tab and search the book
         barcodeDisposable = RxBus.listen(RxEvent.EventSearchByBarcode::class.java).subscribe {
 
-            //barcode can be from 10 to 13 length
+            // Barcode can be from 10 to 13 length
             if (it.barcode.length >= 10) {
-                //set the barcode into edit text and search
-                radioGroup.check(R.id.rb_isbn)
-                etSearch.setText(it.barcode)
-                searchBook()
+                // Set the barcode into edit text and search
+                binding.rgSearchOptions.check(R.id.rb_isbn)
+                binding.etSearch.setText(it.barcode)
+                viewModel.searchBook()
             }
         }
 
-        viewModel.searchResultObserver().removeObservers(viewLifecycleOwner);
+        viewModel.searchResultObserver().removeObservers(viewLifecycleOwner)
         viewModel.searchResultObserver().observe(viewLifecycleOwner, { bookResource ->
 
             if (bookResource != null)
@@ -142,7 +134,7 @@ class SearchFragment : DaggerFragment() {
 
                     SUCCESS -> {
                         loadingDialog.dismiss()
-                        //update adapter
+                        // Update adapter
                         adapter.setBooks(bookResource.data)
                     }
 
@@ -152,7 +144,7 @@ class SearchFragment : DaggerFragment() {
                         requireActivity().toastMessage(bookResource.message, isWarning = true)
                     }
 
-                    //NOT FOUND
+                    // NOT FOUND
                     else -> {
                         loadingDialog.dismiss()
                         adapter.setBooks(null)

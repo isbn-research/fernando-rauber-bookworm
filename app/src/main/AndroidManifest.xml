@@ -6,10 +6,6 @@
     <uses-permission android:name="android.permission.CAMERA" />
 
 
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="true" />
-
     <application
         android:name=".BaseApplication"
         android:allowBackup="true"
@@ -25,8 +21,7 @@
             android:parentActivityName=".activity.MainActivity" />
         <activity
             android:name=".activity.MainActivity"
-            android:label="@string/search"
-            android:theme="@style/AppTheme">
+            android:label="@string/search">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

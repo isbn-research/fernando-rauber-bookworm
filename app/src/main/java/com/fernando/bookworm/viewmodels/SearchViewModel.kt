@@ -23,19 +23,19 @@ class SearchViewModel @Inject constructor() : ViewModel() {
     var searchText: String = ""
     var searchByRef: Int = 0
 
-    private var searchResult = MediatorLiveData<BookResource<List<BookModel>>>()
+    private var _searchResult = MediatorLiveData<BookResource<List<BookModel>>>()
 
-    fun searchResultObserver(): LiveData<BookResource<List<BookModel>>> = searchResult
+    fun searchResultObserver(): LiveData<BookResource<List<BookModel>>> = _searchResult
 
     fun searchBook() {
         //field cant be empty
         if (searchText.isBlank()) {
-            searchResult.value = BookResource.error(R.string.text_required)
+            _searchResult.value = BookResource.error(R.string.text_required)
             return
         }
 
         //show loading popup on the UI
-        searchResult.value = BookResource.loading()
+        _searchResult.value = BookResource.loading()
 
 
         //set search by Title, Author or ISBN
@@ -63,9 +63,9 @@ class SearchViewModel @Inject constructor() : ViewModel() {
             }
             .subscribeOn(Schedulers.io()))
 
-        searchResult.addSource(source) { listResource ->
-            searchResult.value = listResource
-            searchResult.removeSource(source)
+        _searchResult.addSource(source) { listResource ->
+            _searchResult.value = listResource
+            _searchResult.removeSource(source)
         }
     }
 

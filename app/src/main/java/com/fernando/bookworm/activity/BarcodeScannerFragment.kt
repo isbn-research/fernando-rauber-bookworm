@@ -6,13 +6,17 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.SparseArray
-import android.view.*
-import android.widget.TextView
+import android.view.LayoutInflater
+import android.view.SurfaceHolder
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.util.isNotEmpty
 import com.fernando.bookworm.R
+import com.fernando.bookworm.databinding.FragmentBarcodeScannerBinding
 import com.fernando.bookworm.extension.toastMessage
+import com.fernando.bookworm.util.Constants
 import com.fernando.bookworm.util.RxBus
 import com.fernando.bookworm.util.RxEvent
 import com.google.android.gms.vision.CameraSource
@@ -21,69 +25,70 @@ import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
 import dagger.android.support.DaggerFragment
 
-
 class BarcodeScannerFragment : DaggerFragment() {
 
-    private companion object {
-        const val REQUEST_CAMERA_PERMISSION = 20
-    }
+    private var _binding: FragmentBarcodeScannerBinding? = null
+    private val binding get() = _binding!!
+
 
     private lateinit var cameraSource: CameraSource
     private lateinit var detector: BarcodeDetector
-    private lateinit var surfaceView: SurfaceView
-    private lateinit var textView: TextView
-
+    private var barcodeFound: Boolean = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_barcode_scanner, container, false)
+        // View Binding
+        _binding = FragmentBarcodeScannerBinding.inflate(inflater, container, false)
+
+        detector = BarcodeDetector.Builder(requireContext()).build()
+
+        return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        surfaceView = view.findViewById(R.id.camera_surface)
-        textView = view.findViewById(R.id.tv_result)
+    override fun onDestroyView() {
+        super.onDestroyView()
 
+        _binding = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        // Check for camera permission
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
             askForPermission()
-        else
-            setUpControls()
+        else {
+            barcodeFound = false
 
+            // Start Camera
+            cameraSource = CameraSource.Builder(requireContext(), detector)
+                .setAutoFocusEnabled(true)
+                .build()
+            detector.setProcessor(processor)
+            binding.cameraSurfaceView.holder.addCallback(surfaceCallBack)
+            binding.cameraSurfaceView.visibility = View.VISIBLE
+        }
     }
 
+    override fun onPause() {
+        super.onPause()
 
-    private fun setUpControls() {
-//        detector = BarcodeDetector.Builder(requireContext()).build()
-//        cameraSource = CameraSource.Builder(requireContext(), detector)
-//            .setAutoFocusEnabled(true)
-//            .build()
-//
-//        surfaceView.holder.addCallback(surfaceCallBack)
-//        detector.setProcessor(processor)
+        binding.cameraSurfaceView.visibility = View.GONE
+        binding.cameraSurfaceView.holder.removeCallback(surfaceCallBack)
     }
 
     private fun askForPermission() {
-        ActivityCompat.requestPermissions(requireActivity(),
-            arrayOf(Manifest.permission.CAMERA), REQUEST_CAMERA_PERMISSION)
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        if (requestCode == REQUEST_CAMERA_PERMISSION && grantResults.isNotEmpty())
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                setUpControls()
-            else
-                requireActivity().toastMessage(text = "Permission Denied!", isWarning = true)
+        ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.CAMERA), Constants.REQUEST_CAMERA_PERMISSION)
     }
 
     private val surfaceCallBack = object : SurfaceHolder.Callback {
         override fun surfaceCreated(holder: SurfaceHolder?) {
             try {
-                if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
+                if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
                     return
 
                 cameraSource.start(holder)
             } catch (e: Exception) {
-                requireActivity().toastMessage(text = "Something went wrong!", isWarning = true)
+                requireActivity().toastMessage(R.string.error, isWarning = true)
             }
         }
 
@@ -92,16 +97,11 @@ class BarcodeScannerFragment : DaggerFragment() {
         }
 
         override fun surfaceDestroyed(holder: SurfaceHolder?) {
-            if (cameraSource != null) {
-                cameraSource.release();
-            }
+            cameraSource.release()
         }
-
     }
 
     private val processor = object : Detector.Processor<Barcode> {
-
-        private var barcodeFound: Boolean = false
 
         override fun release() {
 
@@ -113,24 +113,18 @@ class BarcodeScannerFragment : DaggerFragment() {
                 val qrCode: SparseArray<Barcode> = detector.detectedItems
                 val code = qrCode.valueAt(0)
 
-                textView.text = code.displayValue
-
-
                 if (code.displayValue.length >= 10 && !barcodeFound) {
                     barcodeFound = true
 
+                    // Send data to MainActivity to switch to Search tab and the data to Search tab search by barcode
                     val handler = Handler(Looper.getMainLooper())
                     handler.post {
-                        RxBus.publish(RxEvent.EventSearchByBarcode(textView.text.toString()))
-
-                        cameraSource.release()
+                        RxBus.publish(RxEvent.EventSearchByBarcode(code.displayValue))
                     }
                 }
 
-            } else
-                textView.text = ""
+            }
         }
-
     }
 
 }

@@ -7,8 +7,7 @@ data class BookModel(val title: String) : Serializable {
     var averageRating: Double = 0.0
     var ratingCount: Int = 0
     var imageURL: String = ""
-    var ISBN10: String = ""
-    var ISBN13: String = ""
+    var ISBN: MutableList<ISBNModel> = arrayListOf()
     var publisher: String = ""
     var published: String = ""
     var pageNumber: Int = 0

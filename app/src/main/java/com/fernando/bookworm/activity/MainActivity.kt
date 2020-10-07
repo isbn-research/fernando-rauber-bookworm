@@ -1,43 +1,63 @@
 package com.fernando.bookworm.activity
 
+import android.content.pm.PackageManager
 import android.os.Bundle
-import androidx.viewpager.widget.ViewPager
 import com.fernando.bookworm.BaseActivity
 import com.fernando.bookworm.R
 import com.fernando.bookworm.adapter.TabAdapter
+import com.fernando.bookworm.databinding.ActivityMainBinding
+import com.fernando.bookworm.extension.toastMessage
+import com.fernando.bookworm.util.Constants
 import com.fernando.bookworm.util.RxBus
 import com.fernando.bookworm.util.RxEvent
-import com.google.android.material.tabs.TabLayout
 import io.reactivex.disposables.Disposable
 
 class MainActivity : BaseActivity() {
 
     private lateinit var barcodeDisposable: Disposable
+    private lateinit var binding: ActivityMainBinding
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
+        // View binding
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         val sectionsPagerAdapter = TabAdapter(supportFragmentManager)
-        val viewPager: ViewPager = findViewById(R.id.view_pager)
-        viewPager.adapter = sectionsPagerAdapter
+        binding.viewPager.adapter = sectionsPagerAdapter
 
-        val tabs: TabLayout = findViewById(R.id.tabs)
-        tabs.setupWithViewPager(viewPager)
+        binding.tabs.setupWithViewPager(binding.viewPager)
 
 
-        //listener when code scanner find the code, tab to "search"
+        // Listener when code scanner find the code, switch to tab Search
         barcodeDisposable = RxBus.listen(RxEvent.EventSearchByBarcode::class.java).subscribe {
-            if (it.barcode.length >= 10)
-                viewPager.setCurrentItem(0, true)
+            switchTab(0)
         }
+    }
+
+    // Switch tab
+    private fun switchTab(position: Int) {
+        binding.viewPager.setCurrentItem(position, true)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (requestCode == Constants.REQUEST_CAMERA_PERMISSION && grantResults.isNotEmpty())
+
+        // If not granted, switch tab and display message
+            if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                toastMessage(R.string.permission_required, isWarning = true)
+
+                switchTab(0)
+            }
     }
 
     override fun onDestroy() {
         super.onDestroy()
 
-        //destroy listener so wont leak memory
+        // Destroy listener so wont leak memory
         if (!barcodeDisposable.isDisposed)
             barcodeDisposable.dispose()
     }

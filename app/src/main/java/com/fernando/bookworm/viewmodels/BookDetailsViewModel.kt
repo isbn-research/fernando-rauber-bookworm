@@ -8,13 +8,13 @@ import javax.inject.Inject
 
 class BookDetailsViewModel @Inject constructor() : ViewModel() {
 
-    private var bookData = MutableLiveData<BookModel>()
+    private var _bookData = MutableLiveData<BookModel>()
 
-    fun bookObserver(): LiveData<BookModel> = bookData
+    fun bookObserver(): LiveData<BookModel> = _bookData
 
     fun setBookModel(book: BookModel?) {
         if (book != null)
-            bookData.value = book
+            _bookData.value = book
     }
 
 }
