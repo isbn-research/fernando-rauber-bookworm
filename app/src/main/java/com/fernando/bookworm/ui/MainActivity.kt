@@ -1,4 +1,4 @@
-package com.fernando.bookworm.activity
+package com.fernando.bookworm.ui
 
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -11,21 +11,26 @@ import com.fernando.bookworm.util.Constants
 import com.fernando.bookworm.util.RxBus
 import com.fernando.bookworm.util.RxEvent
 import io.reactivex.disposables.Disposable
+import javax.inject.Inject
 
 class MainActivity : BaseActivity() {
 
     private lateinit var barcodeDisposable: Disposable
     private lateinit var binding: ActivityMainBinding
 
+    @Inject
+    lateinit var tabAdapter: TabAdapter
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         // View binding
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val sectionsPagerAdapter = TabAdapter(supportFragmentManager)
-        binding.viewPager.adapter = sectionsPagerAdapter
+        //val sectionsPagerAdapter = TabAdapter(supportFragmentManager)
+        binding.viewPager.adapter = tabAdapter
 
         binding.tabs.setupWithViewPager(binding.viewPager)
 

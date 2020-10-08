@@ -1,7 +1,7 @@
 package com.fernando.bookworm.di
 
-import com.fernando.bookworm.activity.BookDetailsActivity
-import com.fernando.bookworm.activity.MainActivity
+import com.fernando.bookworm.ui.BookDetailsActivity
+import com.fernando.bookworm.ui.MainActivity
 import com.fernando.bookworm.di.main.MainFragmentModule
 import com.fernando.bookworm.di.main.MainModule
 import com.fernando.bookworm.di.main.MainScope

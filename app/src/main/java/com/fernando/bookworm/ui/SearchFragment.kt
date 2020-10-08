@@ -1,4 +1,4 @@
-package com.fernando.bookworm.activity
+package com.fernando.bookworm.ui
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -24,7 +24,7 @@ import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
 
-class SearchFragment : DaggerFragment() {
+class SearchFragment @Inject constructor() : DaggerFragment() {
 
     private lateinit var viewModel: SearchViewModel
 
@@ -134,6 +134,9 @@ class SearchFragment : DaggerFragment() {
 
                     SUCCESS -> {
                         loadingDialog.dismiss()
+
+                        // Scroll recycler view to the top
+                        binding.recyclerBookResult.smoothScrollToPosition(0)
                         // Update adapter
                         adapter.setBooks(bookResource.data)
                     }

@@ -28,24 +28,25 @@ class SearchViewModel @Inject constructor() : ViewModel() {
     fun searchResultObserver(): LiveData<BookResource<List<BookModel>>> = _searchResult
 
     fun searchBook() {
-        //field cant be empty
+        // Field cant be empty
         if (searchText.isBlank()) {
             _searchResult.value = BookResource.error(R.string.text_required)
             return
         }
 
-        //show loading popup on the UI
+        // Show loading popup on the UI
         _searchResult.value = BookResource.loading()
 
 
-        //set search by Title, Author or ISBN
-        searchText = when (searchByRef) {
+        // Set search by Title, Author or ISBN
+        val searchParameter = when (searchByRef) {
             R.string.title -> Constants.SEARCH_BY_TITLE + searchText
             R.string.author -> Constants.SEARCH_BY_AUTHOR + searchText
             else -> Constants.SEARCH_BY_ISBN + searchText
         }
 
-        transformToLiveData(authRepository.searchBookOnGoogle(searchText))
+
+        transformToLiveData(authRepository.searchBookOnGoogle(searchParameter))
     }
 
     private fun transformToLiveData(value: Flowable<ResultGoogle>) {

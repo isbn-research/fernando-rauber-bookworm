@@ -1,4 +1,4 @@
-package com.fernando.bookworm.activity
+package com.fernando.bookworm.ui
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -24,8 +24,9 @@ import com.google.android.gms.vision.Detector
 import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
 import dagger.android.support.DaggerFragment
+import javax.inject.Inject
 
-class BarcodeScannerFragment : DaggerFragment() {
+class BarcodeScannerFragment @Inject constructor() : DaggerFragment() {
 
     private var _binding: FragmentBarcodeScannerBinding? = null
     private val binding get() = _binding!!

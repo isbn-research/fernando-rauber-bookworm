@@ -16,11 +16,11 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".activity.BookDetailsActivity"
+            android:name=".ui.BookDetailsActivity"
             android:label="@string/book_details"
-            android:parentActivityName=".activity.MainActivity" />
+            android:parentActivityName=".ui.MainActivity" />
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".ui.MainActivity"
             android:label="@string/search">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

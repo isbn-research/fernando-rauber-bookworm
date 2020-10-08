@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="6dp"
     android:background="@drawable/bg_rounded_6dp"
-    android:elevation="6dp"
+    android:elevation="@dimen/elevation"
     android:gravity="center"
     android:orientation="horizontal"
     android:padding="6dp">

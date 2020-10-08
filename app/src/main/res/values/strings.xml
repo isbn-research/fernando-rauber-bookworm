@@ -33,5 +33,6 @@
     <string name="description">Description</string>
     <string name="n_a">N/A</string>
     <string name="book_not_found">Book not found</string>
-
+    <string name="open_info_google">See more on Google</string>
+    <string name="link_book_not_available">Book link not available</string>
 </resources>

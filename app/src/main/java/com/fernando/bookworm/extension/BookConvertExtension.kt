@@ -39,7 +39,7 @@ fun googleConvertToBookModel(googleBook: List<GoogleModel>): List<BookModel> {
                 }
 
                 bookModel.publisher = book.volumeInfo.publisher ?: Constants.NOT_AVAILABLE
-
+                bookModel.bookLink = book.volumeInfo.bookLink ?: ""
                 bookModel.description = book.volumeInfo.description ?: Constants.NOT_AVAILABLE
 
                 ratingCount = book.volumeInfo.ratingsCount

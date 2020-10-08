@@ -1,5 +1,7 @@
-package com.fernando.bookworm.activity
+package com.fernando.bookworm.ui
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -14,6 +16,7 @@ import com.fernando.bookworm.util.Constants
 import com.fernando.bookworm.viewmodels.BookDetailsViewModel
 import com.fernando.bookworm.viewmodels.ViewModelProviderFactory
 import javax.inject.Inject
+
 
 class BookDetailsActivity : BaseActivity() {
 
@@ -82,6 +85,13 @@ class BookDetailsActivity : BaseActivity() {
                 tvPublishedDate.text = book.published
                 tvPageNumber.text = if (book.pageNumber == 0) Constants.NOT_AVAILABLE else "${book.pageNumber}"
                 tvDescription.text = book.description
+
+                btBookLink.setOnClickListener {
+                    if (book.bookLink.isBlank())
+                        toastMessage(R.string.link_book_not_available)
+                    else
+                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(book.bookLink)))
+                }
             }
         })
     }

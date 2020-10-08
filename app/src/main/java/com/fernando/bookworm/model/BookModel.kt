@@ -9,6 +9,7 @@ data class BookModel(val title: String) : Serializable {
     var imageURL: String = ""
     var ISBN: MutableList<ISBNModel> = arrayListOf()
     var publisher: String = ""
+    var bookLink: String = ""
     var published: String = ""
     var pageNumber: Int = 0
     var description: String = ""

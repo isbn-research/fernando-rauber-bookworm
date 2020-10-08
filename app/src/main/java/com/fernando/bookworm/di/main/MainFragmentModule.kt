@@ -1,8 +1,8 @@
 package com.fernando.bookworm.di.main
 
 
-import com.fernando.bookworm.activity.BarcodeScannerFragment
-import com.fernando.bookworm.activity.SearchFragment
+import com.fernando.bookworm.ui.BarcodeScannerFragment
+import com.fernando.bookworm.ui.SearchFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
