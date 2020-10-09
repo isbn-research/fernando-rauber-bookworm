@@ -13,6 +13,7 @@ import com.fernando.bookworm.adapter.BookAdapter
 import com.fernando.bookworm.databinding.FragmentSearchBinding
 import com.fernando.bookworm.extension.createLoadingPopup
 import com.fernando.bookworm.extension.hideKeyboard
+import com.fernando.bookworm.extension.isNetworkAvailable
 import com.fernando.bookworm.extension.toastMessage
 import com.fernando.bookworm.util.BookResource.AuthStatus.*
 import com.fernando.bookworm.util.RxBus
@@ -60,6 +61,15 @@ class SearchFragment @Inject constructor() : DaggerFragment() {
         _binding = null
     }
 
+    private fun searchBook() {
+
+        // Verify if the user has connection with internet
+        if (!requireActivity().isNetworkAvailable())
+            return
+
+        viewModel.searchBook()
+    }
+
     // Initialize variables
     private fun initVariables() {
         // Create loading popup
@@ -74,7 +84,7 @@ class SearchFragment @Inject constructor() : DaggerFragment() {
 
         // Action when click in search button
         binding.btSearch.setOnClickListener {
-            viewModel.searchBook()
+            searchBook()
         }
         // Set value into ViewModel
         binding.etSearch.doAfterTextChanged { text -> viewModel.searchText = text?.toString() ?: "" }
@@ -118,7 +128,7 @@ class SearchFragment @Inject constructor() : DaggerFragment() {
                 // Set the barcode into edit text and search
                 binding.rgSearchOptions.check(R.id.rb_isbn)
                 binding.etSearch.setText(it.barcode)
-                viewModel.searchBook()
+                searchBook()
             }
         }
 
