@@ -13,6 +13,7 @@ import com.fernando.bookworm.util.RxEvent
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
+
 class MainActivity : BaseActivity() {
 
     private lateinit var barcodeDisposable: Disposable
@@ -21,9 +22,21 @@ class MainActivity : BaseActivity() {
     @Inject
     lateinit var tabAdapter: TabAdapter
 
+    // Load file to get secret keys
+    object Keys {
+
+        init {
+            System.loadLibrary("native-lib")
+        }
+
+        external fun apiKey(): String
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Set Google key
+        Constants.GOOGLE_KEY = Keys.apiKey()
 
         // View binding
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -33,7 +46,6 @@ class MainActivity : BaseActivity() {
         binding.viewPager.adapter = tabAdapter
 
         binding.tabs.setupWithViewPager(binding.viewPager)
-
 
         // Listener when code scanner find the code, switch to tab Search
         barcodeDisposable = RxBus.listen(RxEvent.EventSearchByBarcode::class.java).subscribe {

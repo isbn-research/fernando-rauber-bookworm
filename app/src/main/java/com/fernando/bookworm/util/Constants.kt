@@ -2,7 +2,7 @@ package com.fernando.bookworm.util
 
 object Constants {
 
-    const val GOOGLE_KEY = ""
+    var GOOGLE_KEY = ""
     const val GOOGLE_BASE_URL = "https://www.googleapis.com/books/v1/"
 
     // Tabs from MainActivity
