@@ -24,11 +24,9 @@ class MainActivity : BaseActivity() {
 
     // Load file to get secret keys
     object Keys {
-
         init {
             System.loadLibrary("native-lib")
         }
-
         external fun apiKey(): String
     }
 

@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">Bookworm</string>
 
-
     //activity labels
     <string name="search">Search</string>
     <string name="book_details">Book Details</string>
@@ -15,6 +14,7 @@
     <string name="error">Something went wrong. Sorry</string>
     <string name="ok">OK</string>
 
+    // Fragment Search
     <string name="title">Title</string>
     <string name="title_hint">Ex. Harry Potter, Don Quixote…</string>
     <string name="author">Author</string>
@@ -22,8 +22,9 @@
     <string name="isbn">ISBN</string>
     <string name="isbn_hint">Ex. 9783161484100</string>
     <string name="text_required">Please insert a book title, author or ISBN</string>
+    <string name="book_not_found">Book not found on Google repository</string>
 
-
+    // Activity Book Details
     <string name="by">by</string>
     <string name="isbn_code_10">ISBN-10:</string>
     <string name="isbn_code_13">ISBN-13:</string>
@@ -33,7 +34,6 @@
     <string name="page_number">Number of pages:</string>
     <string name="description">Description</string>
     <string name="n_a">N/A</string>
-    <string name="book_not_found">Book not found</string>
     <string name="open_info_google">See more on Google</string>
     <string name="link_book_not_available">Book link not available</string>
 </resources>

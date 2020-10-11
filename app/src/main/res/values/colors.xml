@@ -4,18 +4,10 @@
     <color name="colorPrimary">#F7931E</color>
     <color name="colorPrimaryDark">#DA7908</color>
     <color name="colorPrimaryLight">#f9ab4e</color>
-    <color name="colorAccent">#3E6899</color>
+    <color name="colorAccent">#4D62CC</color>
     <color name="colorAccentLight">#4674ab</color>
 
-    <color name="colorPrimaryText">#212121</color>
-
-    <color name="secondary_text">#757575</color>
-
-    <color name="icons">#FFFFFF</color>
-    <color name="divider">#BDBDBD</color>
-
-
-   <color name="message_warning">#F2537B</color>
+    <color name="message_warning">#F2537B</color>
 
     <color name="gray">#CCCCCC</color>
 
