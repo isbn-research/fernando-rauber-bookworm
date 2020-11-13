@@ -1,91 +1,106 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipToPadding="false"
-    android:orientation="vertical"
+
     tools:context="com.fernando.bookworm.ui.SearchFragment">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+
+    <RadioGroup
+        android:id="@+id/rg_search_options"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:clipToPadding="false"
-        android:orientation="vertical"
-        android:paddingStart="@dimen/activity_margin"
-        android:paddingTop="8dp"
-        android:paddingEnd="@dimen/activity_margin"
-        android:paddingBottom="8dp">
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:checkedButton="@id/rb_title"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <RadioGroup
-            android:id="@+id/rg_search_options"
-            android:layout_width="match_parent"
+        <RadioButton
+            android:id="@+id/rb_title"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:checkedButton="@id/rb_title"
-            android:orientation="horizontal">
+            android:layout_weight="1"
+            android:text="@string/title"
+            android:textColor="@color/text_black" />
 
-            <RadioButton
-                android:id="@+id/rb_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/title"
-                android:textColor="@color/text_black" />
-
-            <RadioButton
-                android:id="@+id/rb_author"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/author"
-                android:textColor="@color/text_black" />
-
-            <RadioButton
-                android:id="@+id/rb_isbn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/isbn"
-                android:textColor="@color/text_black" />
-        </RadioGroup>
-
-        <EditText
-            android:id="@+id/et_search"
-            android:layout_width="match_parent"
+        <RadioButton
+            android:id="@+id/rb_author"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:autofillHints="@string/title"
-            android:ems="10"
-            android:hint="@string/title_hint"
-            android:inputType="textPersonName"
-            android:textColor="@color/text_black"
-            android:textSize="14sp" />
+            android:layout_weight="1"
+            android:text="@string/author"
+            android:textColor="@color/text_black" />
 
-        <Button
-            android:id="@+id/bt_search"
-            android:layout_width="match_parent"
+        <RadioButton
+            android:id="@+id/rb_isbn"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/button_ripple_effect"
-            android:backgroundTint="@color/colorPrimary"
-            android:elevation="@dimen/elevation"
-            android:text="@string/search"
-            android:textColor="@color/text_white" />
+            android:layout_weight="1"
+            android:text="@string/isbn"
+            android:textColor="@color/text_black" />
+    </RadioGroup>
 
-    </LinearLayout>
+
+    <EditText
+        android:id="@+id/et_search"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:autofillHints="@string/title"
+        android:ems="10"
+        android:hint="@string/title_hint"
+        android:inputType="textPersonName"
+        android:textColor="@color/text_black"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rg_search_options" />
+
+    <Button
+        android:id="@+id/bt_search"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/button_ripple_effect"
+        android:backgroundTint="@color/colorPrimary"
+        android:elevation="@dimen/elevation"
+        android:text="@string/search"
+        android:textColor="@color/text_white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_search" />
 
     <View
         android:id="@+id/divider"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="1dp"
-        android:background="?android:attr/listDivider" />
+        android:layout_marginTop="8dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bt_search" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_book_result"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="10dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
         android:paddingStart="10dp"
-        android:paddingEnd="10dp" />
+        android:paddingEnd="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
