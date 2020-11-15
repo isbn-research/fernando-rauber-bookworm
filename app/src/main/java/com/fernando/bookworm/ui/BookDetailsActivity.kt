@@ -39,20 +39,24 @@ class BookDetailsActivity : BaseActivity() {
         // ViewModel
         viewModel = ViewModelProvider(this, providerFactory).get(BookDetailsViewModel::class.java)
 
-        retrieveBook()
+        setBook()
         observers()
     }
 
     // In case book has some error of formation, it will finish the activity
-    private fun retrieveBook() {
+    fun setBook(book: BookModel? = null) {
+        if (book != null) {
+            viewModel.setBookModel(book)
+            return
+        }
+
         try {
 
-            val book = intent.getSerializableExtra(Constants.BOOK_KEY) as BookModel
-            viewModel.setBookModel(book)
+            val extra = intent.getSerializableExtra(Constants.BOOK_KEY) as BookModel
+            viewModel.setBookModel(extra)
 
         } catch (e: Exception) {
             toastMessage(R.string.book_error, isWarning = true)
-            finish()
         }
     }
 
@@ -73,7 +77,7 @@ class BookDetailsActivity : BaseActivity() {
                     when (isbn.type) {
 
                         Constants.ISBN_OTHER -> {
-                            layoutISBNOther.visibility = View.VISIBLE
+                            groupISBNOther.visibility = View.VISIBLE
                             tvIsbnOther.text = isbn.identifier
                         }
                         Constants.ISBN_10 -> tvIsbn10.text = isbn.identifier
