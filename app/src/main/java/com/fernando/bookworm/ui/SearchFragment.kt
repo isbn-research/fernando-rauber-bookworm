@@ -15,7 +15,7 @@ import com.fernando.bookworm.extension.createLoadingPopup
 import com.fernando.bookworm.extension.hideKeyboard
 import com.fernando.bookworm.extension.isNetworkAvailable
 import com.fernando.bookworm.extension.toastMessage
-import com.fernando.bookworm.util.BookResource.AuthStatus.*
+import com.fernando.bookworm.util.BookResource.*
 import com.fernando.bookworm.util.RxBus
 import com.fernando.bookworm.util.RxEvent
 import com.fernando.bookworm.viewmodels.SearchViewModel
@@ -136,13 +136,13 @@ class SearchFragment @Inject constructor() : DaggerFragment() {
         viewModel.searchResultObserver().observe(viewLifecycleOwner, { bookResource ->
 
             if (bookResource != null)
-                when (bookResource.status) {
-                    LOADING -> {
+                when (bookResource) {
+                   is Loading -> {
                         hideKeyboard()
                         loadingDialog.show()
                     }
 
-                    SUCCESS -> {
+                   is Success -> {
                         loadingDialog.dismiss()
 
                         // Scroll recycler view to the top
@@ -151,14 +151,13 @@ class SearchFragment @Inject constructor() : DaggerFragment() {
                         adapter.setBooks(bookResource.data)
                     }
 
-                    ERROR -> {
+                   is Error -> {
                         loadingDialog.dismiss()
                         adapter.setBooks(null)
-                        requireActivity().toastMessage(bookResource.message, isWarning = true)
+                        requireActivity().toastMessage(bookResource.msg, isWarning = true)
                     }
 
-                    // NOT FOUND
-                    else -> {
+                    is NotFound -> {
                         loadingDialog.dismiss()
                         adapter.setBooks(null)
                         requireActivity().toastMessage(R.string.book_not_found, isWarning = true)
