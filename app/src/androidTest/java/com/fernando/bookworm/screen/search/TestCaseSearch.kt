@@ -17,9 +17,9 @@ class TestCaseSearch {
     @get:Rule
     var activityRule = ActivityScenarioRule(MainActivity::class.java)
 
-
     @Before
     fun setup() {
+
     }
 
     @After

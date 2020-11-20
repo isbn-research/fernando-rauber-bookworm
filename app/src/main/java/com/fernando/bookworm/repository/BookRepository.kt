@@ -1,5 +1,6 @@
 package com.fernando.bookworm.repository
 
+import com.fernando.bookworm.R
 import com.fernando.bookworm.extension.googleConvertToBookModel
 import com.fernando.bookworm.model.BookModel
 import com.fernando.bookworm.model.google.ResultGoogle
@@ -24,10 +25,14 @@ class BookRepository @Inject constructor() {
             }
             .map { resource ->
 
-                if (resource.totalItems <= 0)
-                    BookResource.NotFound
-                else
-                    BookResource.Success(googleConvertToBookModel(resource.items!!))
+                when (resource.totalItems) {
+                    -1 ->
+                        BookResource.Error(R.string.error)
+                    0 ->
+                        BookResource.NotFound
+                    else ->
+                        BookResource.Success(googleConvertToBookModel(resource.items!!))
+                }
 
             }.subscribeOn(Schedulers.io())
             .startWith(BookResource.Loading)
