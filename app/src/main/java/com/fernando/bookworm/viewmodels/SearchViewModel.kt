@@ -44,7 +44,7 @@ class SearchViewModel @Inject constructor() : ReactiveViewModel() {
                 _searchResult.value = it
 
             }, {})
-            .also { disposable == it }
+            .also { disposable.add(it) }
     }
 
 }
